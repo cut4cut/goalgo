@@ -1,10 +1,16 @@
 from logging import getLogger
-from uuid import UUID
 
 from trading_service.config import Config
-from trading_service.connector.brocker import MockedBrockerConnector, OrderKind
+from trading_service.connector.brocker import (
+    MockedBrockerConnector,
+    OrderKind,
+    OrderMetaData,
+)
 from trading_service.connector.data import MoexDataConnector
+from trading_service.logger import init_logger
 from trading_service.strategy import mocked_ctrategy
+
+init_logger()
 
 logger = getLogger("trading_service")
 
@@ -13,13 +19,16 @@ if __name__ == "__main__":
 
     connector = MoexDataConnector(config)
     brocker = MockedBrockerConnector()
-    open_orders: list[UUID] = []
+    open_orders: list[OrderMetaData] = []
     quantity = 3
 
     for data in connector:
         logger.info("Get new data %s", data)
 
-        if mocked_ctrategy(data):
+        signal = mocked_ctrategy(data)
+        logger.info("Strategy signal %s", signal)
+
+        if signal:
             if not (
                 order := brocker.make_order(
                     config.instrument, data.close, quantity, OrderKind.BUY
@@ -28,11 +37,13 @@ if __name__ == "__main__":
                 raise ValueError(
                     f"Balance {brocker.balance}, needed amount {data.close * quantity}"
                 )
-            open_orders.append(order.order_id)
-            logger.info("Make new order %s", order)
+            open_orders.append(order)
+            logger.info("Open order %s", order)
 
         else:
-            for order_id in open_orders:
-                if not (order := brocker.close_order(order_id, data.close)):
-                    raise ValueError
-                logger.info("Close order %s", order)
+            for order in open_orders:
+                if not (
+                    closed_order := brocker.close_order(order.order_id, data.close)
+                ):
+                    logger.error("Cant close order %s", order)
+                logger.info("Close order %s", closed_order)
