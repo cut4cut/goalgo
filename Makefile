@@ -5,6 +5,12 @@ env:
 	@$(eval SHELL:=/bin/bash)
 	@cp .env.template .env
 
+postgres-up:
+	docker-compose up
+
+postgres-down:
+	docker-compose down
+
 docker-build:
 	docker build --tag $(APP_NAME):latest .
 
@@ -17,6 +23,9 @@ docker-push:
 
 run:
 	python3 -m trading_service
+
+run-adminka:
+	uvicorn admin_service.app:app --reload
 
 format:
 	isort .
