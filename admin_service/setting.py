@@ -5,7 +5,7 @@ class Settings(BaseSettings):
     host: str = "0.0.0.0"
     port: int = 8000
 
-    connection_string: str = "postgresql+asyncpg://user:pass@localhost:5432/postgres"
+    connection_string: str = ""
 
     allow_origins: list[str] = []
 

@@ -3,7 +3,7 @@ PWD = $(shell pwd)
 
 env:
 	@$(eval SHELL:=/bin/bash)
-	@cp .env.template .env
+	@cp .env.example .env
 
 postgres-up:
 	docker-compose up
@@ -21,7 +21,7 @@ docker-push:
 	sudo docker image tag $(APP_NAME) cut4cut/$(APP_NAME):1.0
 	sudo docker image push cut4cut/$(APP_NAME):1.0
 
-run:
+run-strategy:
 	python3 -m trading_service
 
 run-adminka:
