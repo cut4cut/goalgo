@@ -7,6 +7,7 @@ from uuid import UUID, uuid4
 
 from annotated_types import Ge
 
+from trading_service.pkg.observer import observeit
 from trading_service.utils import now_dt_mostz
 
 logger = getLogger("brocker_connector")
@@ -60,6 +61,7 @@ class MockedBrockerConnector:
         self.balance: float = 50_000.0
         self.orders: dict[UUID, OrderMetaData] = {}
 
+    @observeit("order")
     def make_order(
         self,
         instrument: str,
@@ -86,6 +88,7 @@ class MockedBrockerConnector:
 
         return new_order
 
+    @observeit("order")
     def close_order(self, order_id: UUID, price: NonNegative) -> OrderMetaData | None:
         if not (order := self.orders.get(order_id, None)):
             return None
