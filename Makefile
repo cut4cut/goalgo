@@ -5,11 +5,11 @@ env:
 	@$(eval SHELL:=/bin/bash)
 	@cp .env.example .env
 
-postgres-up:
-	docker-compose up
+up:
+	docker-compose up --build
 
-postgres-down:
-	docker-compose down
+down:
+	docker-compose down --remove-orphans
 
 docker-build:
 	docker build --tag $(APP_NAME):latest .
