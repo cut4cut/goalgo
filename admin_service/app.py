@@ -14,10 +14,11 @@ from admin_service.controller import (
     StrategyController,
 )
 from admin_service.pkg.provider import provide_limit_offset_pagination
+from admin_service.setting import settings
 
 session_config = AsyncSessionConfig(expire_on_commit=False)
 sqlalchemy_config = SQLAlchemyAsyncConfig(
-    connection_string="postgresql+asyncpg://user:pass@localhost:5432/postgres",
+    connection_string=settings.connection_string,
     session_config=session_config,
 )  # Create 'db_session' dependency.
 sqlalchemy_plugin = SQLAlchemyInitPlugin(config=sqlalchemy_config)

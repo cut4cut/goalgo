@@ -31,8 +31,18 @@ class IncomingModel(UUIDAuditBase):
 
     data: Mapped[dict]
 
+    strategy_id: Mapped[UUID] = mapped_column(ForeignKey("strategy.id"))
+    strategy: Mapped[StrategyModel] = relationship(
+        lazy="joined", innerjoin=True, viewonly=True
+    )
+
 
 class OrderModel(UUIDAuditBase):
     __tablename__ = "order"
 
     data: Mapped[dict]
+
+    strategy_id: Mapped[UUID] = mapped_column(ForeignKey("strategy.id"))
+    strategy: Mapped[StrategyModel] = relationship(
+        lazy="joined", innerjoin=True, viewonly=True
+    )

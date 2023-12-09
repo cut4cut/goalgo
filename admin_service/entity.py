@@ -30,7 +30,9 @@ class Strategy(BaseModel):
 
 class Incoming(BaseModel):
     id: UUID
-    created: datetime
+    created_at: datetime
+    updated_at: datetime
+
     data: dict
 
     strategy_id: UUID
@@ -38,7 +40,9 @@ class Incoming(BaseModel):
 
 class Order(BaseModel):
     id: UUID
-    created: datetime
+    created_at: datetime
+    updated_at: datetime
+
     data: dict
 
     strategy_id: UUID
